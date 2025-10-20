@@ -43,17 +43,19 @@ minecraft {
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
+    // 模组专属有效仓库
     maven { name = 'Curios'; url = 'https://maven.theillusivec4.top/' }
     maven { name = 'GeckoLib'; url = 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/' }
-    maven { name = 'ShadowSoFire'; url = 'https://maven.shadowsoffire.com/' }
-    maven { name = 'Kosmx'; url = 'https://maven.kosmx.dev/' }
     maven { name = 'Modrinth'; url = 'https://api.modrinth.com/maven' }
-    maven { name = 'CurseMaven'; url = 'https://cursemaven.com' }
+    maven { name = 'CurseMaven'; url = 'https://cursemaven.com' } // 关键：用于下载上述两个依赖
 
+    // 阿里云镜像（国内访问优化）
     maven { name = 'Aliyun Public'; url = 'https://maven.aliyun.com/repository/public' }
     maven { name = 'Aliyun Central'; url = 'https://maven.aliyun.com/repository/central' }
     
     mavenCentral()
+
+    // 移除失效的 ShadowSoFire 仓库（避免无效请求）
 }
 
 // 依赖解析策略
@@ -62,11 +64,12 @@ configurations.all {
         force(
             'top.theillusivec4.curios:curios-forge:5.14.1+1.20.1',
             'software.bernie.geckolib:geckolib-forge-1.20.1:4.4.9',
-            'dev.shadowsoffire:Apothic-Attributes:1.20.1-1.3.7',
-            'dev.kosmx.player-anim:player-animation-lib-forge:1.0.2-rc1+1.20.1',
             'top.theillusivec4.caelus:caelus-forge:3.2.0+1.20.1',
             'curse.maven:irons-spells-n-spellbooks-455448:6488484',
-            'curse.maven:lendercataclysm-551586:6906993'
+            'curse.maven:lendercataclysm-551586:6906993',
+            // 同步更新目标依赖的 CurseMaven 配置
+            'curse.maven:apothic-attributes-489420:5634071',
+            'curse.maven:playeranimator-597444:4587214'
         )
     }
 }
@@ -75,14 +78,18 @@ configurations.all {
 dependencies {
     minecraft 'net.minecraftforge:forge:1.20.1-47.3.0'
     
-    implementation fg.deobf(group: 'top.theillusivec4.curios', name: 'curios-forge', version: '5.14.1+1.20.1', classifier: 'mapped_parchment_2023.09.03-1.20.1')
-    implementation fg.deobf(group: 'software.bernie.geckolib', name: 'geckolib-forge-1.20.1', version: '4.4.9', classifier: 'mapped_parchment_2023.09.03-1.20.1')
-    implementation fg.deobf(group: 'dev.shadowsoffire', name: 'Apothic-Attributes', version: '1.20.1-1.3.7', classifier: 'mapped_parchment_2023.09.03-1.20.1')
-    implementation fg.deobf(group: 'dev.kosmx.player-anim', name: 'player-animation-lib-forge', version: '1.0.2-rc1+1.20.1', classifier: 'mapped_parchment_2023.09.03-1.20.1')
-    implementation fg.deobf(group: 'top.theillusivec4.caelus', name: 'caelus-forge', version: '3.2.0+1.20.1', classifier: 'mapped_parchment_2023.09.03-1.20.1')
-
+    // 其他原有有效依赖
+    implementation fg.deobf('top.theillusivec4.curios:curios-forge:5.14.1+1.20.1')
+    implementation fg.deobf('software.bernie.geckolib:geckolib-forge-1.20.1:4.4.9')
+    implementation fg.deobf('top.theillusivec4.caelus:caelus-forge:3.2.0+1.20.1')
     implementation fg.deobf(group: 'curse.maven', name: 'irons-spells-n-spellbooks-455448', version: '6488484', classifier: 'mapped_parchment_2023.09.03-1.20.1')
     implementation fg.deobf(group: 'curse.maven', name: 'lendercataclysm-551586', version: '6906993', classifier: 'mapped_parchment_2023.09.03-1.20.1')
+
+    // 重点更新：目标依赖的 CurseMaven 引用（使用实际 Project ID 和 File ID）
+    // Apothic-Attributes 1.20.1-1.3.7
+    implementation fg.deobf(group: 'curse.maven', name: 'apothic-attributes-489420', version: '5634071', classifier: 'mapped_parchment_2023.09.03-1.20.1')
+    // Player Animation Library 1.0.2-rc1+1.20
+    implementation fg.deobf(group: 'curse.maven', name: 'playeranimator-597444', version: '4587214', classifier: 'mapped_parchment_2023.09.03-1.20.1')
 }
 tasks.named('processResources', ProcessResources).configure {
     var replaceProperties = [
