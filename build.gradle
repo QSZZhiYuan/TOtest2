@@ -62,12 +62,11 @@ repositories {
 configurations.all {
     resolutionStrategy {
         force(
-            'top.theillusivec4.curios:curios-forge:5.14.1+1.20.1',
+            'top.theillusivec4.curios:curse-forge:5.14.1+1.20.1',
             'software.bernie.geckolib:geckolib-forge-1.20.1:4.4.9',
             'top.theillusivec4.caelus:caelus-forge:3.2.0+1.20.1',
             'curse.maven:irons-spells-n-spellbooks-455448:6488484',
             'curse.maven:lendercataclysm-551586:6906993',
-            // 同步更新目标依赖的 CurseMaven 配置
             'curse.maven:apothic-attributes-489420:5634071',
             'curse.maven:playeranimator-597444:4587214'
         )
@@ -78,18 +77,16 @@ configurations.all {
 dependencies {
     minecraft 'net.minecraftforge:forge:1.20.1-47.3.0'
     
-    // 其他原有有效依赖
+    // 其他原有有效依赖（移除 classifier）
     implementation fg.deobf('top.theillusivec4.curios:curios-forge:5.14.1+1.20.1')
     implementation fg.deobf('software.bernie.geckolib:geckolib-forge-1.20.1:4.4.9')
     implementation fg.deobf('top.theillusivec4.caelus:caelus-forge:3.2.0+1.20.1')
-    implementation fg.deobf(group: 'curse.maven', name: 'irons-spells-n-spellbooks-455448', version: '6488484', classifier: 'mapped_parchment_2023.09.03-1.20.1')
-    implementation fg.deobf(group: 'curse.maven', name: 'lendercataclysm-551586', version: '6906993', classifier: 'mapped_parchment_2023.09.03-1.20.1')
 
-    // 重点更新：目标依赖的 CurseMaven 引用（使用实际 Project ID 和 File ID）
-    // Apothic-Attributes 1.20.1-1.3.7
-    implementation fg.deobf(group: 'curse.maven', name: 'apothic-attributes-489420', version: '5634071', classifier: 'mapped_parchment_2023.09.03-1.20.1')
-    // Player Animation Library 1.0.2-rc1+1.20
-    implementation fg.deobf(group: 'curse.maven', name: 'playeranimator-597444', version: '4587214', classifier: 'mapped_parchment_2023.09.03-1.20.1')
+    // CurseMaven 依赖（全部移除 classifier）
+    implementation fg.deobf(group: 'curse.maven', name: 'irons-spells-n-spellbooks-455448', version: '6488484')
+    implementation fg.deobf(group: 'curse.maven', name: 'lendercataclysm-551586', version: '6906993')
+    implementation fg.deobf(group: 'curse.maven', name: 'apothic-attributes-489420', version: '5634071')
+    implementation fg.deobf(group: 'curse.maven', name: 'playeranimator-597444', version: '4587214')
 }
 tasks.named('processResources', ProcessResources).configure {
     var replaceProperties = [
